@@ -1,0 +1,144 @@
+using System;
+using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace BAITAP
+{
+    public partial class Form1 : Form
+    {
+        // Khai báo danh sách nhân viên sử dụng BindingList để tự động cập nhật DataGridView
+        private BindingList<NhanVien> listNhanVien = new BindingList<NhanVien>();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Thêm dữ liệu mẫu ban đầu
+            listNhanVien.Add(new NhanVien("NV001", "Nguyễn Thị Thu Hiền", 8500000));
+            listNhanVien.Add(new NhanVien("NV002", "Nguyễn Trần Minh Triết", 6500000));
+
+            // Gán danh sách vào DataGridView
+            dataGridView1.DataSource = listNhanVien;
+
+            // Chỉnh tên hiển thị cho các cột
+            if (dataGridView1.Columns["MSNV"] != null) dataGridView1.Columns["MSNV"].HeaderText = "MSNV";
+            if (dataGridView1.Columns["TenNV"] != null) dataGridView1.Columns["TenNV"].HeaderText = "Tên NV";
+            if (dataGridView1.Columns["LuongCB"] != null) dataGridView1.Columns["LuongCB"].HeaderText = "Lương CB";
+        }
+
+        // 1. CHỨC NĂNG THÊM
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            frmNhanVien formNV = new frmNhanVien();
+            if (formNV.ShowDialog() == DialogResult.OK)
+            {
+                listNhanVien.Add(formNV.NhanVienInfo);
+            }
+        }
+
+        // 2. CHỨC NĂNG SỬA
+        private void btnSua_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem != null)
+            {
+                // Lấy thông tin nhân viên từ dòng đang được chọn
+                NhanVien nvSelected = (NhanVien)dataGridView1.CurrentRow.DataBoundItem;
+
+                // Mở Form sửa và truyền dữ liệu nhân viên sang
+                frmNhanVien formNV = new frmNhanVien(nvSelected);
+                if (formNV.ShowDialog() == DialogResult.OK)
+                {
+                    // Tải lại hiển thị DataGridView
+                    dataGridView1.Refresh();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn nhân viên cần sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // 3. CHỨC NĂNG XÓA
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem != null)
+            {
+                DialogResult confirm = MessageBox.Show(
+                    "Bạn có chắc chắn muốn xóa nhân viên này không?",
+                    "Xác nhận",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (confirm == DialogResult.Yes)
+{
+                    NhanVien nvSelected = (NhanVien)dataGridView1.CurrentRow.DataBoundItem;
+                    listNhanVien.Remove(nvSelected);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn nhân viên cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // 4. CHỨC NĂNG ĐÓNG
+        private void btnDong_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void dgvNhanVien_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void btnSua_Click_1(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem != null)
+            {
+                NhanVien nvSelected = (NhanVien)dataGridView1.CurrentRow.DataBoundItem;
+
+                frmNhanVien formNV = new frmNhanVien(nvSelected);
+                if (formNV.ShowDialog() == DialogResult.OK)
+                {
+                    dataGridView1.Refresh();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn nhân viên cần sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnXoa_Click_1(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem != null)
+            {
+                DialogResult confirm = MessageBox.Show(
+                    "Bạn có chắc chắn muốn xóa nhân viên này?",
+                    "Xác nhận",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (confirm == DialogResult.Yes)
+                {
+                    NhanVien nvSelected = (NhanVien)dataGridView1.CurrentRow.DataBoundItem;
+                    listNhanVien.Remove(nvSelected);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn dòng cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnDong_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
