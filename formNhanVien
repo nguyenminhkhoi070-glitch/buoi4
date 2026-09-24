@@ -1,0 +1,109 @@
+using System;
+using System.Windows.Forms;
+
+namespace BAITAP
+{
+    public partial class frmNhanVien : Form
+    {
+        // Thuộc tính dùng để lưu thông tin nhân viên trả về cho Form1
+        public NhanVien NhanVienInfo { get; private set; }
+
+        // Constructor khi THÊM mới
+        public frmNhanVien()
+        {
+            InitializeComponent();
+        }
+
+        // Constructor khi SỬA (nhận đối tượng nhân viên cũ)
+        public frmNhanVien(NhanVien nv) : this()
+        {
+            NhanVienInfo = nv;
+            txtMSNV.Text = nv.MSNV;
+            txtTenNV.Text = nv.TenNV;
+            txtLuongCB.Text = nv.LuongCB.ToString();
+
+            // Khóa không cho sửa Mã nhân viên (nếu là khóa chính)
+            txtMSNV.ReadOnly = true;
+        }
+
+        private void frmNhanVien_Load(object sender, EventArgs e)
+        {
+        }
+
+        // Sự kiện click nút "Đồng ý"
+        private void btnDongY_Click(object sender, EventArgs e)
+        {
+            // Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(txtMSNV.Text) ||
+                string.IsNullOrWhiteSpace(txtTenNV.Text) ||
+                string.IsNullOrWhiteSpace(txtLuongCB.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Kiểm tra định dạng lương phải là số
+            if (!decimal.TryParse(txtLuongCB.Text.Trim(), out decimal luongCB))
+            {
+                MessageBox.Show("Lương căn bản phải là số hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Lưu dữ liệu vào đối tượng NhanVienInfo
+            if (NhanVienInfo == null)
+            {
+                NhanVienInfo = new NhanVien();
+            }
+
+            NhanVienInfo.MSNV = txtMSNV.Text.Trim();
+            NhanVienInfo.TenNV = txtTenNV.Text.Trim();
+            NhanVienInfo.LuongCB = luongCB;
+
+            this.DialogResult = DialogResult.OK; // Đánh dấu thành công
+            this.Close();
+        }
+
+        // Sự kiện click nút "Bỏ qua"
+        private void btnBoQua_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void btnDongY_Click_1(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtMSNV.Text) ||
+                string.IsNullOrWhiteSpace(txtTenNV.Text) ||
+                string.IsNullOrWhiteSpace(txtLuongCB.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.DialogResult = DialogResult.None; // Giữ nguyên form nếu chưa nhập đủ
+                return;
+            }
+if (!decimal.TryParse(txtLuongCB.Text.Trim(), out decimal luongCB))
+            {
+                MessageBox.Show("Lương căn bản phải là số!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.DialogResult = DialogResult.None;
+                return;
+            }
+
+            if (NhanVienInfo == null)
+            {
+                NhanVienInfo = new NhanVien();
+            }
+
+            NhanVienInfo.MSNV = txtMSNV.Text.Trim();
+            NhanVienInfo.TenNV = txtTenNV.Text.Trim();
+            NhanVienInfo.LuongCB = luongCB;
+
+            this.DialogResult = DialogResult.OK; // Đóng Form và trả về kết quả OK
+            this.Close();
+        }
+
+        private void btnBoQua_Click_1(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+    }
+}
